@@ -68,8 +68,8 @@ recipients = cursor.fetchall()
 
 msgRoot = MIMEMultipart('related')
 msgRoot['Subject'] = 'Daily Dilbert (' + todaysDate + ')'
-msgRoot['From'] = '"Daily Dilbert" <dailydilbert@bastih.dev>'
-msgRoot['To'] = '"Daily Dilbert" <dailydilbert@bastih.dev>'
+msgRoot['From'] = '"Daily Dilbert" <' + getDilbertInc.mail_username + '>'
+msgRoot['To'] = '"Daily Dilbert" <' + getDilbertInc.mail_username + '>'
 msgRoot.preamble = 'This is a multi-part message in MIME format.'
 print("Recipients found!")
 
