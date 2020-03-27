@@ -11,6 +11,7 @@ from datetime import datetime
 from datetime import date
 import mysql.connector
 import getDilbertInc
+import getDilbertEmail
 
 ##############################################
 #                                            #
@@ -18,26 +19,15 @@ import getDilbertInc
 #                                            #
 ##############################################
 
-print("Daily Dilbert script started!")
-print("Script by basti1499")
-print("")
 todaysDate = str(datetime.date(datetime.now()))
-print("Todays date: " + todaysDate)
-print("Getting todays URL...")
 page = "https://dilbert.com/strip/"
 page += todaysDate
-print("URL found!")
-print("Sending request to " + page + "...")
 result = requests.get(page)
 if result.status_code != 200:
-    print("Error! Exiting script.")
     exit()
-print("Status-Code: 200 (OK)")
-print("Grabbing image URL...")
 soup = BeautifulSoup(result.content, "html.parser")
 img = soup.find('img', {'class':'img-responsive img-comic'})
 img_url = "http:" + img['src']
-print("Image URL found!")
 
 ##############################################
 #                                            #
@@ -45,21 +35,17 @@ print("Image URL found!")
 #                                            #
 ##############################################
 
-print("Downloading image from " + img_url + "...")
 resp = requests.get(img_url, stream=True)
 local_file = open('local_image.jpg', 'wb')
 resp.raw.decode_content = True
 shutil.copyfileobj(resp.raw, local_file)
 del resp
-print("Image downloaded!")
 
 ##############################################
 #                                            #
 # Finding and adding recipients to the email #
 #                                            #
 ##############################################
-
-print("Searching for recipients...")
 
 mydb = mysql.connector.connect(host=getDilbertInc.mysql_host, user=getDilbertInc.mysql_user, passwd=getDilbertInc.mysql_pw, database=getDilbertInc.mysql_db)
 cursor = mydb.cursor()
@@ -71,7 +57,6 @@ msgRoot['Subject'] = 'Daily Dilbert (' + todaysDate + ')'
 msgRoot['From'] = '"Daily Dilbert" <' + getDilbertInc.mail_username + '>'
 msgRoot['To'] = '"Daily Dilbert" <' + getDilbertInc.mail_username + '>'
 msgRoot.preamble = 'This is a multi-part message in MIME format.'
-print("Recipients found!")
 
 ##############################################
 #                                            #
@@ -79,7 +64,6 @@ print("Recipients found!")
 #                                            #
 ##############################################
 
-print("Adding content...")
 msgAlternative = MIMEMultipart('alternative')
 msgRoot.attach(msgAlternative)
 
@@ -95,8 +79,7 @@ dateString += ". "
 dateString += ("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember")[today.month-1]
 dateString += " " + str(today.year)
 
-#msgText = MIMEText('Hier dein Daily Dilbert.<br><br><img src="cid:image1"><br>' + todaysDate + 'db version', 'html')
-msgText = MIMEText(getDilbertInc.email_text % (dateString), 'html')
+msgText = MIMEText(getDilbertEmail.email_text % (dateString), 'html')
 msgAlternative.attach(msgText)
 
 fp = open('local_image.jpg', 'rb')
@@ -105,7 +88,6 @@ fp.close()
 
 msgImage.add_header('Content-ID', '<image1>')
 msgRoot.attach(msgImage)
-print("Content added!")
 
 ##############################################
 #                                            #
@@ -113,10 +95,7 @@ print("Content added!")
 #                                            #
 ##############################################
 
-print("Sending email...")
 smtp = smtplib.SMTP_SSL("smtp.eu.mailgun.org", 465)
 smtp.login(getDilbertInc.mail_username, getDilbertInc.mail_password)
 smtp.sendmail(getDilbertInc.mail_username, recipients, msgRoot.as_string())
 smtp.quit()
-print("Email sent!")
-print("Success! Exiting Script.")
