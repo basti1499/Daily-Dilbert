@@ -21,7 +21,7 @@ The script is written in Python 3 and can be executed on a Linux machine using C
 Copyright
 ---------
 
-This project is licensed under [_Creative Commons Namensnennung 4.0 International_](http://creativecommons.org/licenses/by/4.0/)
+This project is licensed under [_Creative Commons Namensnennung 4.0 International_](http://creativecommons.org/licenses/by/4.0/) <br/>
 The Dilbert comic strip is owned and published by Scott Adams at [Dilbert.com](https://dilbert.com/)
 
 © 2020 Bastian Hartenstein <br/>
