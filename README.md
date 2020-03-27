@@ -9,7 +9,7 @@ This is a Python script which allows you to send the daily Dilbert comic strip t
 Used technologies
 -----------------------
 
-The script is written in Python 3 and can be executed on a Linux machine using Cron. It makes use of the following libraries:
+The script is written in Python 3 and can be executed automatically on a Linux machine using Cron. It makes use of the following libraries:
 
  * **requests** to handle HTTP requests and access the dilbert website.
  * **BeautifulSoup** to handle the HTML code received from the HTTP request.
