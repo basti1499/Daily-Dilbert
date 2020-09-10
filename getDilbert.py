@@ -27,7 +27,9 @@ if result.status_code != 200:
     exit()
 soup = BeautifulSoup(result.content, "html.parser")
 img = soup.find('img', {'class':'img-responsive img-comic'})
-img_url = "http:" + img['src']
+img_url = img['src']
+if not img_url.startswith('http'):
+    img_url = "http:" + img_url
 
 ##############################################
 #                                            #
